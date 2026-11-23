@@ -1,0 +1,22 @@
+# Solo para el fork IdMarchena/napa: trae el main de RAAR-18/napa cada 15 minutos.
+# Cada actualización del main del fork hace que Railway y Render redespliegan.
+# No subir este archivo a RAAR-18/napa.
+name: Sincronizar con RAAR-18
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.repository == 'IdMarchena/napa'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Traer main de RAAR-18/napa
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X POST "repos/${{ github.repository }}/merge-upstream" -f branch=main
